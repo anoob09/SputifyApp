@@ -3,6 +3,7 @@ package com.example.sputify;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -20,11 +21,12 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.Locale;
 
-
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
@@ -117,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (AUTH_TOKEN_REQUEST_CODE == requestCode) {
             mAccessToken = response.getAccessToken();
+//            System.out.println("mAccesstoken" + mAccessToken);
             updateTokenView();
         } else if (AUTH_CODE_REQUEST_CODE == requestCode) {
             mAccessCode = response.getCode();
@@ -137,6 +140,11 @@ public class MainActivity extends AppCompatActivity {
     private void updateTokenView() {
         final TextView tokenView = findViewById(R.id.token_text_view);
         tokenView.setText(getString(R.string.token, mAccessToken));
+        try {
+            postRequest("anup", mAccessToken);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void updateCodeView() {
@@ -153,5 +161,47 @@ public class MainActivity extends AppCompatActivity {
     private Uri getRedirectUri() {
         return Uri.parse(REDIRECT_URI);
     }
-    
+
+    public void postRequest(String name, String token) throws IOException {
+
+        MediaType MEDIA_TYPE = MediaType.parse("application/json");
+
+        OkHttpClient client = new OkHttpClient();
+
+        JSONObject postdata = new JSONObject();
+        try {
+            postdata.put("username", name);
+            postdata.put("token", token);
+        } catch(JSONException e){
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        Log.wtf("post message", "message sent " + token);
+        RequestBody body = RequestBody.create(MEDIA_TYPE, postdata.toString());
+
+        Request requestToSputifyServer = new Request.Builder()
+                .url("http://192.168.0.102:4000/")
+                .post(body)
+                .header("Accept", "application/json")
+                .header("Content-Type", "application/json")
+                .build();
+
+        client.newCall(requestToSputifyServer).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                String mMessage = e.getMessage().toString();
+                Log.w("failure Response", mMessage);
+                //call.cancel();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                String mMessage = response.body().string();
+                Log.e("POST METHOD", mMessage);
+            }
+        });
+    }
+
+
 }
