@@ -191,6 +191,8 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        Intent intent = new Intent(this, UsersActivity.class);
+        startActivity(intent);
     }
 
     private void updateCodeView() {
@@ -227,7 +229,7 @@ public class MainActivity extends AppCompatActivity {
         RequestBody body = RequestBody.create(MEDIA_TYPE, postdata.toString());
 
         Request requestToSputifyServer = new Request.Builder()
-                .url("http://192.168.0.102:5000/")
+                .url("http://192.168.0.100:5000/")
                 .post(body)
                 .header("Accept", "application/json")
                 .header("Content-Type", "application/json")
