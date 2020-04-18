@@ -81,8 +81,11 @@ public class MainActivity extends AppCompatActivity {
                             // Logic to handle location object
                             mLattitude = location.getLatitude();
                             mLongitude = location.getLongitude();
+                            String textToDisplay = mLattitude + " " + mLongitude;
+//                            Toast.makeText(getApplicationContext(), textToDisplay, Toast.LENGTH_SHORT).show();
                         }
                         else{
+                            Toast.makeText(getApplicationContext(), "LOCATION NULL", Toast.LENGTH_SHORT).show();
                             System.out.println("Location is null");
                         }
                     }
@@ -229,7 +232,7 @@ public class MainActivity extends AppCompatActivity {
         RequestBody body = RequestBody.create(MEDIA_TYPE, postdata.toString());
 
         Request requestToSputifyServer = new Request.Builder()
-                .url("http://192.168.0.100:5000/")
+                .url("http://192.168.43.57:5000/")
                 .post(body)
                 .header("Accept", "application/json")
                 .header("Content-Type", "application/json")

@@ -1,4 +1,21 @@
 apply plugin: 'com.android.application'
+buildscript {
+    repositories {
+        google() // here
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.2.0-alpha12'
+    }
+}
+allprojects {
+    repositories {
+        google() // and here
+        jcenter()
+    }
+}
+
+
 
 android {
     compileSdkVersion 29
