@@ -1,17 +1,25 @@
 package com.example.sputify;
 
 public class MyListData{
-    private String description;
+    private String songName;
+    private String userId;
     private int imgId;
-    public MyListData(String description, int imgId) {
-        this.description = description;
+    public MyListData(String songName, String userId, int imgId) {
+        this.songName = songName;
+        this.userId = userId;
         this.imgId = imgId;
     }
-    public String getDescription() {
-        return description;
+    public String getSongName() {
+        return songName;
     }
-    public void setDescription(String description) {
-        this.description = description;
+    public void setSongName(String songName) {
+        this.songName = songName;
+    }
+    public String getUserId() {
+        return userId;
+    }
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
     public int getImgId() {
         return imgId;

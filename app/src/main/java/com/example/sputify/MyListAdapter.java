@@ -4,9 +4,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -29,14 +28,10 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final MyListData myListData = listdata[position];
-        holder.textView.setText(listdata[position].getDescription());
-        holder.imageView.setImageResource(listdata[position].getImgId());
-        holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(view.getContext(),"click on item: "+myListData.getDescription(),Toast.LENGTH_LONG).show();
-            }
-        });
+        holder.songNameTextView.setText(listdata[position].getSongName());
+        holder.userImage.setImageResource(listdata[position].getImgId());
+        holder.userIdTextView.setText(listdata[position].getUserId());
+//        holder.linearLayout.setOnClickListener(view -> Toast.makeText(view.getContext(),"click on item: "+ myListData.getSongName(),Toast.LENGTH_LONG).show());
     }
 
 
@@ -46,14 +41,16 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public ImageView imageView;
-        public TextView textView;
-        public RelativeLayout relativeLayout;
+        public ImageView userImage;
+        public TextView songNameTextView;
+        public TextView userIdTextView;
+        public LinearLayout linearLayout;
         public ViewHolder(View itemView) {
             super(itemView);
-            this.imageView = itemView.findViewById(R.id.imageView);
-            this.textView = itemView.findViewById(R.id.textView);
-            relativeLayout = itemView.findViewById(R.id.relativeLayout);
+            this.userImage = itemView.findViewById(R.id.user_dp);
+            this.songNameTextView = itemView.findViewById(R.id.song_name);
+            this.userIdTextView = itemView.findViewById(R.id.user_id);
+            linearLayout = itemView.findViewById(R.id.linearLayout);
         }
     }
 }

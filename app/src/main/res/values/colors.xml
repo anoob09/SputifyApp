@@ -3,4 +3,8 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="song_name_color">#FFFFFF</color>
+    <color name="user_name_color">#A9A9A9</color>
+    <color name="song_list_backgroud_color">#000000</color>
+    <color name="song_recycler_background_color">#000000</color>
 </resources>
