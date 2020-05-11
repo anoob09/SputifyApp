@@ -16,7 +16,7 @@ public class UsersActivity extends AppCompatActivity {
         if (extras == null)
             System.out.println("Intent Data Emptya " + " Intent empty");
         else
-            System.out.println(extras.getString("songs"));
+            System.out.println(extras.getString("CAR_DETAILS"));
         MyListData[] myListData = new MyListData[] {
                 new MyListData("Say so", "anoob09" ,android.R.drawable.ic_dialog_email),
                 new MyListData("Not ok", "anoob08" ,android.R.drawable.ic_dialog_email),

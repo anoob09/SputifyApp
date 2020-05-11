@@ -245,7 +245,11 @@ public class MainActivity extends AppCompatActivity {
             updateTokenView();
         } else */ if (AUTH_CODE_REQUEST_CODE == requestCode) {
             mAccessCode = response.getCode();
-                sendCode();
+            try {
+                postRequest(mAccessCode);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -264,14 +268,10 @@ public class MainActivity extends AppCompatActivity {
 //        tokenView.setText(getString(R.string.token, mAccessToken));
 //    }
 
-    private void sendCode() {
-        try {
-            postRequest(mAccessCode);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private void sendCode(String code) {
         Intent intent = new Intent(this, UsersActivity.class);
-        intent.putExtra("songs", intentData);
+        intent.putExtra("CAR_DETAILS", code);
+        Log.e("Before sendingasda", code);
         startActivity(intent);
     }
 
@@ -290,7 +290,6 @@ public class MainActivity extends AppCompatActivity {
         MediaType MEDIA_TYPE = MediaType.parse("application/json");
 
         OkHttpClient client = new OkHttpClient();
-
         JSONObject postdata = new JSONObject();
         try {
             postdata.put("code", access_code);
@@ -323,9 +322,10 @@ public class MainActivity extends AppCompatActivity {
 
                 String mMessage = response.body().string();
                 Log.e("POST METHOD", mMessage);
-                intentData = mMessage;
+                sendCode(mMessage);
             }
         });
+
     }
 
 
