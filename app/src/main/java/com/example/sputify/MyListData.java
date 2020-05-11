@@ -9,6 +9,9 @@ public class MyListData{
         this.userId = userId;
         this.imgId = imgId;
     }
+
+    public MyListData() {}
+
     public String getSongName() {
         return songName;
     }
