@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
     private String mAccessToken;
     private String mAccessCode;
     private Call mCall;
+    String intentData = "";
 
     private boolean checkPermissions(){
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
@@ -228,7 +229,7 @@ public class MainActivity extends AppCompatActivity {
     private AuthorizationRequest getAuthenticationRequest(AuthorizationResponse.Type type) {
         return new AuthorizationRequest.Builder(CLIENT_ID, type, getRedirectUri().toString())
                 .setShowDialog(false)
-                .setScopes(new String[]{"user-read-email", "user-read-playback-state"})
+                .setScopes(new String[]{"user-read-email", "user-read-playback-state", "user-read-recently-played"})
                 .setCampaign("your-campaign-token")
                 .build();
     }
@@ -270,6 +271,7 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         Intent intent = new Intent(this, UsersActivity.class);
+        intent.putExtra("songs", intentData);
         startActivity(intent);
     }
 
@@ -321,6 +323,7 @@ public class MainActivity extends AppCompatActivity {
 
                 String mMessage = response.body().string();
                 Log.e("POST METHOD", mMessage);
+                intentData = mMessage;
             }
         });
     }
