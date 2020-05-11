@@ -13,13 +13,11 @@ import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -28,7 +26,6 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
 import com.spotify.sdk.android.auth.AuthorizationClient;
 import com.spotify.sdk.android.auth.AuthorizationRequest;
 import com.spotify.sdk.android.auth.AuthorizationResponse;
@@ -57,8 +54,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     //Spotify Auth
-    public static final String CLIENT_ID = "089d841ccc194c10a77afad9e1c11d54";
-    public static final String REDIRECT_URI = "spotify-sdk://auth";
+    public static final String CLIENT_ID = "0ed69a13f4324b1fa02a4cf26a11bba9";
+    public static final String REDIRECT_URI = "https://eflask-app-1.herokuapp.com/";
     public static final int AUTH_TOKEN_REQUEST_CODE = 0x10;
     public static final int AUTH_CODE_REQUEST_CODE = 0x11;
 
@@ -178,54 +175,55 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    public void onGetUserProfileClicked(View view) {
-        if (mAccessToken == null) {
-            final Snackbar snackbar = Snackbar.make(findViewById(R.id.activity_main), R.string.warning_need_token, Snackbar.LENGTH_SHORT);
-            snackbar.getView().setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent));
-            snackbar.show();
-            return;
-        }
-
-        final Request request = new Request.Builder()
-                .url("https://api.spotify.com/v1/me")
-                .addHeader("Authorization", "Bearer " + mAccessToken)
-                .build();
-
-        cancelCall();
-        mCall = mOkHttpClient.newCall(request);
-
-        mCall.enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                setResponse("Failed to fetch data: " + e);
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                try {
-                    final JSONObject jsonObject = new JSONObject(response.body().string());
-                    setResponse(jsonObject.toString(3));
-                } catch (JSONException e) {
-                    setResponse("Failed to parse data: " + e);
-                }
-            }
-        });
-    }
+//    public void onGetUserProfileClicked(View view) {
+//        if (mAccessToken == null) {
+//            final Snackbar snackbar = Snackbar.make(findViewById(R.id.activity_main), R.string.warning_need_token, Snackbar.LENGTH_SHORT);
+//            snackbar.getView().setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent));
+//            snackbar.show();
+//            return;
+//        }
+//
+//        final Request request = new Request.Builder()
+//                .url("https://api.spotify.com/v1/me")
+//                .addHeader("Authorization", "Bearer " + mAccessToken)
+//                .build();
+//
+//        cancelCall();
+//        mCall = mOkHttpClient.newCall(request);
+//
+//        mCall.enqueue(new Callback() {
+//            @Override
+//            public void onFailure(Call call, IOException e) {
+//                setResponse("Failed to fetch data: " + e);
+//            }
+//
+//            @Override
+//            public void onResponse(Call call, Response response) throws IOException {
+//                try {
+//                    final JSONObject jsonObject = new JSONObject(response.body().string());
+//                    setResponse(jsonObject.toString(3));
+//                    System.out.println(jsonObject);
+//                } catch (JSONException e) {
+//                    setResponse("Failed to parse data: " + e);
+//                }
+//            }
+//        });
+//    }
 
     public void onRequestCodeClicked(View view) {
         final AuthorizationRequest request = getAuthenticationRequest(AuthorizationResponse.Type.CODE);
         AuthorizationClient.openLoginActivity(this, AUTH_CODE_REQUEST_CODE, request);
     }
 
-    public void onRequestTokenClicked(View view) {
-        getLastLocation();
-        final AuthorizationRequest request = getAuthenticationRequest(AuthorizationResponse.Type.TOKEN);
-        AuthorizationClient.openLoginActivity(this, AUTH_TOKEN_REQUEST_CODE, request);
-    }
+//    public void onRequestTokenClicked(View view) {
+//        getLastLocation();
+//        final AuthorizationRequest request = getAuthenticationRequest(AuthorizationResponse.Type.TOKEN);
+//        AuthorizationClient.openLoginActivity(this, AUTH_TOKEN_REQUEST_CODE, request);
+//    }
 
-    public void onClearCredentialsClicked(View view) {
-        AuthorizationClient.clearCookies(this);
-    }
+//    public void onClearCredentialsClicked(View view) {
+//        AuthorizationClient.clearCookies(this);
+//    }
 
     private AuthorizationRequest getAuthenticationRequest(AuthorizationResponse.Type type) {
         return new AuthorizationRequest.Builder(CLIENT_ID, type, getRedirectUri().toString())
@@ -240,41 +238,39 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         final AuthorizationResponse response = AuthorizationClient.getResponse(resultCode, data);
 
-        if (AUTH_TOKEN_REQUEST_CODE == requestCode) {
+        /* if (AUTH_TOKEN_REQUEST_CODE == requestCode) {
             mAccessToken = response.getAccessToken();
 //            System.out.println("mAccesstoken" + mAccessToken);
             updateTokenView();
-        } else if (AUTH_CODE_REQUEST_CODE == requestCode) {
+        } else */ if (AUTH_CODE_REQUEST_CODE == requestCode) {
             mAccessCode = response.getCode();
-            updateCodeView();
+                sendCode();
         }
     }
 
-    private void setResponse(final String text) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                final TextView responseView = findViewById(R.id.response_text_view);
-                responseView.setText(text);
-            }
-        });
-    }
+//    private void setResponse(final String text) {
+//        runOnUiThread(new Runnable() {
+//            @Override
+//            public void run() {
+//                final TextView responseView = findViewById(R.id.response_text_view);
+//                responseView.setText(text);
+//            }
+//        });
+//    }
 
-    private void updateTokenView() {
-        final TextView tokenView = findViewById(R.id.token_text_view);
-        tokenView.setText(getString(R.string.token, mAccessToken));
+//    private void updateTokenView() {
+//        final TextView tokenView = findViewById(R.id.token_text_view);
+//        tokenView.setText(getString(R.string.token, mAccessToken));
+//    }
+
+    private void sendCode() {
         try {
-            postRequest("anup", mAccessToken);
+            postRequest(mAccessCode);
         } catch (IOException e) {
             e.printStackTrace();
         }
         Intent intent = new Intent(this, UsersActivity.class);
         startActivity(intent);
-    }
-
-    private void updateCodeView() {
-        final TextView codeView = findViewById(R.id.code_text_view);
-        codeView.setText(getString(R.string.code, mAccessCode));
     }
 
     private void cancelCall() {
@@ -287,7 +283,7 @@ public class MainActivity extends AppCompatActivity {
         return Uri.parse(REDIRECT_URI);
     }
 
-    public void postRequest(String name, String token) throws IOException {
+    public void postRequest(String access_code) throws IOException {
 
         MediaType MEDIA_TYPE = MediaType.parse("application/json");
 
@@ -295,8 +291,7 @@ public class MainActivity extends AppCompatActivity {
 
         JSONObject postdata = new JSONObject();
         try {
-            postdata.put("username", name);
-            postdata.put("token", token);
+            postdata.put("code", access_code);
             postdata.put("latitude", mLattitude);
             postdata.put("longitude", mLongitude);
         } catch(JSONException e){
@@ -306,7 +301,8 @@ public class MainActivity extends AppCompatActivity {
         RequestBody body = RequestBody.create(MEDIA_TYPE, postdata.toString());
 
         Request requestToSputifyServer = new Request.Builder()
-                .url("https://eflask-app-1.herokuapp.com/")
+//                .url("https://eflask-app-1.herokuapp.com/")
+                .url("http://192.168.43.57:5000/")
                 .post(body)
                 .header("Accept", "application/json")
                 .header("Content-Type", "application/json")

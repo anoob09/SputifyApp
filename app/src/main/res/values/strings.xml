@@ -4,7 +4,7 @@
     <string name="code">Code: %1$s</string>
     <string name="token">Access Token: %1$s</string>
     <string name="btn_get_profile">Get User Profile</string>
-    <string name="btn_req_code">Request Code</string>
+    <string name="btn_req_code">Sign In</string>
     <string name="btn_req_token">Request Token</string>
     <string name="btn_clear_credentials">Clear WebView Credentials</string>
     <string name="song_name">Song Name</string>

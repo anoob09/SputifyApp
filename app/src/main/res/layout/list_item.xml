@@ -19,8 +19,8 @@
 
         <ImageView
             android:id="@+id/user_dp"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="80dip"
+            android:layout_height="80dip"
             android:layout_marginLeft="@dimen/space_default"
             android:tintMode="src_in"
             />
@@ -38,7 +38,9 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
+                android:textSize="@dimen/song_text_size"
                 android:text="@string/song_name"
+                android:textStyle="bold"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@color/song_name_color"
                 />
@@ -50,6 +52,7 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text="@string/user_name"
+                android:textSize="@dimen/userid_text_size"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/user_name_color"
                 />
