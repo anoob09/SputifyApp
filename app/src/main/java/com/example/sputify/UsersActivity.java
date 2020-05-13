@@ -6,12 +6,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.spotify.sdk.android.auth.AuthorizationClient;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-
 public class UsersActivity extends AppCompatActivity {
 
     // Returns a java for json array input
@@ -96,6 +97,7 @@ public class UsersActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
+        AuthorizationClient.clearCookies(this);
     }
 }
 

@@ -1,7 +1,9 @@
 package com.example.sputify;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Environment;
 import android.os.StrictMode;
 import android.util.Log;
@@ -95,8 +97,15 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final MyListData myListData = listdata[position];
-        holder.songNameTextView.setText(listdata[position].getSongName());
-        holder.userIdTextView.setText(listdata[position].getUserId());
+        holder.songNameTextView.setText(myListData.getSongName());
+        holder.userIdTextView.setText(myListData.getUserId());
+        holder.listItemLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent launcher = new Intent( Intent.ACTION_VIEW, Uri.parse(myListData.getSongUrl()) );
+                v.getContext().startActivity(launcher);
+            }
+        });
         final String[] file = {""};
         Thread t = new Thread(new Runnable() {
             @Override

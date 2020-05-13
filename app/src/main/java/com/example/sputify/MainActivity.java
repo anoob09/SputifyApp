@@ -186,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
     private AuthorizationRequest getAuthenticationRequest(AuthorizationResponse.Type type) {
         return new AuthorizationRequest.Builder(CLIENT_ID, type, getRedirectUri().toString())
                 .setShowDialog(false)
-                .setScopes(new String[]{"user-read-email", "user-read-playback-state", "user-read-recently-played"})
+                .setScopes(new String[]{"user-read-email", "user-read-playback-state", "user-read-recently-played", "user-top-read"})
                 .setCampaign("your-campaign-token")
                 .build();
     }
@@ -299,9 +299,9 @@ public class MainActivity extends AppCompatActivity {
 //        AuthorizationClient.openLoginActivity(this, AUTH_TOKEN_REQUEST_CODE, request);
 //    }
 
-//    public void onClearCredentialsClicked(View view) {
-//        AuthorizationClient.clearCookies(this);
-//    }
+    public void onClearCredentialsClicked(View view) {
+        AuthorizationClient.clearCookies(this);
+    }
 
 //    public void onGetUserProfileClicked(View view) {
 //        if (mAccessToken == null) {
