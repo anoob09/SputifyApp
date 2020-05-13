@@ -13,6 +13,8 @@ import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -165,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
         getLastLocation();
         setContentView(R.layout.activity_main);
         getSupportActionBar().setTitle(String.format(
-                Locale.US, "Spotify Auth Sample %s", com.spotify.sdk.android.auth.BuildConfig.VERSION_NAME));
+                Locale.US, "Sputify", com.spotify.sdk.android.auth.BuildConfig.VERSION_NAME));
     }
 
 
@@ -175,6 +177,131 @@ public class MainActivity extends AppCompatActivity {
         cancelCall();
         super.onDestroy();
     }
+
+    public void onRequestCodeClicked(View view) {
+        final AuthorizationRequest request = getAuthenticationRequest(AuthorizationResponse.Type.CODE);
+        AuthorizationClient.openLoginActivity(this, AUTH_CODE_REQUEST_CODE, request);
+    }
+
+    private AuthorizationRequest getAuthenticationRequest(AuthorizationResponse.Type type) {
+        return new AuthorizationRequest.Builder(CLIENT_ID, type, getRedirectUri().toString())
+                .setShowDialog(false)
+                .setScopes(new String[]{"user-read-email", "user-read-playback-state", "user-read-recently-played"})
+                .setCampaign("your-campaign-token")
+                .build();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        final AuthorizationResponse response = AuthorizationClient.getResponse(resultCode, data);
+
+        /* if (AUTH_TOKEN_REQUEST_CODE == requestCode) {
+            mAccessToken = response.getAccessToken();
+//            System.out.println("mAccesstoken" + mAccessToken);
+            updateTokenView();
+        } else */ if (AUTH_CODE_REQUEST_CODE == requestCode) {
+            mAccessCode = response.getCode();
+            try {
+                postRequest(mAccessCode);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void sendCode(String code) {
+        Intent intent = new Intent(this, UsersActivity.class);
+        intent.putExtra("CAR_DETAILS", code);
+        Log.e("Before sendingasda", code);
+        startActivity(intent);
+    }
+
+    private void cancelCall() {
+        if (mCall != null) {
+            mCall.cancel();
+        }
+    }
+
+    private Uri getRedirectUri() {
+        return Uri.parse(REDIRECT_URI);
+    }
+
+    public void postRequest(String access_code) throws IOException {
+
+        MediaType MEDIA_TYPE = MediaType.parse("application/json");
+
+        OkHttpClient client = new OkHttpClient();
+        JSONObject postdata = new JSONObject();
+        try {
+            postdata.put("code", access_code);
+            postdata.put("latitude", mLattitude);
+            postdata.put("longitude", mLongitude);
+        } catch(JSONException e){
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+            RequestBody reqBody = RequestBody.create(MEDIA_TYPE, postdata.toString());
+
+        Request requestToSputifyServer = new Request.Builder()
+//                .url("https://eflask-app-1.herokuapp.com/")
+                .url("http://192.168.43.57:5000/")
+                .post(reqBody)
+                .header("Accept", "application/json")
+                .header("Content-Type", "application/json")
+                .build();
+
+        ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.root_view);
+        LinearLayout insideLinearLayout = (LinearLayout) findViewById(R.id.insideLinearLayout);
+        progressBar.setVisibility(View.VISIBLE);
+        linearLayout.setAlpha((float) 0.4);
+        insideLinearLayout.setVisibility(View.GONE);
+        client.newCall(requestToSputifyServer).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                String mMessage = e.getMessage().toString();
+                Log.w("failure Response", mMessage);
+                //call.cancel();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String mMessage = response.body().string();
+                Log.e("POST METHOD", mMessage);
+                sendCode(mMessage);
+            }
+        });
+    }
+
+
+
+
+
+//    private void setResponse(final String text) {
+//        runOnUiThread(new Runnable() {
+//            @Override
+//            public void run() {
+//                final TextView responseView = findViewById(R.id.response_text_view);
+//                responseView.setText(text);
+//            }
+//        });
+//    }
+
+//    private void updateTokenView() {
+//        final TextView tokenView = findViewById(R.id.token_text_view);
+//        tokenView.setText(getString(R.string.token, mAccessToken));
+//    }
+    //    public void onRequestTokenClicked(View view) {
+//        getLastLocation();
+//        final AuthorizationRequest request = getAuthenticationRequest(AuthorizationResponse.Type.TOKEN);
+//        AuthorizationClient.openLoginActivity(this, AUTH_TOKEN_REQUEST_CODE, request);
+//    }
+
+//    public void onClearCredentialsClicked(View view) {
+//        AuthorizationClient.clearCookies(this);
+//    }
 
 //    public void onGetUserProfileClicked(View view) {
 //        if (mAccessToken == null) {
@@ -211,122 +338,7 @@ public class MainActivity extends AppCompatActivity {
 //        });
 //    }
 
-    public void onRequestCodeClicked(View view) {
-        final AuthorizationRequest request = getAuthenticationRequest(AuthorizationResponse.Type.CODE);
-        AuthorizationClient.openLoginActivity(this, AUTH_CODE_REQUEST_CODE, request);
-    }
 
-//    public void onRequestTokenClicked(View view) {
-//        getLastLocation();
-//        final AuthorizationRequest request = getAuthenticationRequest(AuthorizationResponse.Type.TOKEN);
-//        AuthorizationClient.openLoginActivity(this, AUTH_TOKEN_REQUEST_CODE, request);
-//    }
-
-//    public void onClearCredentialsClicked(View view) {
-//        AuthorizationClient.clearCookies(this);
-//    }
-
-    private AuthorizationRequest getAuthenticationRequest(AuthorizationResponse.Type type) {
-        return new AuthorizationRequest.Builder(CLIENT_ID, type, getRedirectUri().toString())
-                .setShowDialog(false)
-                .setScopes(new String[]{"user-read-email", "user-read-playback-state", "user-read-recently-played"})
-                .setCampaign("your-campaign-token")
-                .build();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        final AuthorizationResponse response = AuthorizationClient.getResponse(resultCode, data);
-
-        /* if (AUTH_TOKEN_REQUEST_CODE == requestCode) {
-            mAccessToken = response.getAccessToken();
-//            System.out.println("mAccesstoken" + mAccessToken);
-            updateTokenView();
-        } else */ if (AUTH_CODE_REQUEST_CODE == requestCode) {
-            mAccessCode = response.getCode();
-            try {
-                postRequest(mAccessCode);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-//    private void setResponse(final String text) {
-//        runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                final TextView responseView = findViewById(R.id.response_text_view);
-//                responseView.setText(text);
-//            }
-//        });
-//    }
-
-//    private void updateTokenView() {
-//        final TextView tokenView = findViewById(R.id.token_text_view);
-//        tokenView.setText(getString(R.string.token, mAccessToken));
-//    }
-
-    private void sendCode(String code) {
-        Intent intent = new Intent(this, UsersActivity.class);
-        intent.putExtra("CAR_DETAILS", code);
-        Log.e("Before sendingasda", code);
-        startActivity(intent);
-    }
-
-    private void cancelCall() {
-        if (mCall != null) {
-            mCall.cancel();
-        }
-    }
-
-    private Uri getRedirectUri() {
-        return Uri.parse(REDIRECT_URI);
-    }
-
-    public void postRequest(String access_code) throws IOException {
-
-        MediaType MEDIA_TYPE = MediaType.parse("application/json");
-
-        OkHttpClient client = new OkHttpClient();
-        JSONObject postdata = new JSONObject();
-        try {
-            postdata.put("code", access_code);
-            postdata.put("latitude", mLattitude);
-            postdata.put("longitude", mLongitude);
-        } catch(JSONException e){
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        RequestBody body = RequestBody.create(MEDIA_TYPE, postdata.toString());
-
-        Request requestToSputifyServer = new Request.Builder()
-//                .url("https://eflask-app-1.herokuapp.com/")
-                .url("http://192.168.43.57:5000/")
-                .post(body)
-                .header("Accept", "application/json")
-                .header("Content-Type", "application/json")
-                .build();
-
-        client.newCall(requestToSputifyServer).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                String mMessage = e.getMessage().toString();
-                Log.w("failure Response", mMessage);
-                //call.cancel();
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-
-                String mMessage = response.body().string();
-                Log.e("POST METHOD", mMessage);
-                sendCode(mMessage);
-            }
-        });
-
-    }
 
 
 }

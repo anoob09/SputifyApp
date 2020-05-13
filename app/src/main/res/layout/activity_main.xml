@@ -30,6 +30,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:gravity="center"
+        android:id="@+id/insideLinearLayout"
         >
         <ImageView
             android:id="@+id/image1"
@@ -50,9 +51,8 @@
             android:text="@string/btn_req_code" />
     </LinearLayout>
     <ProgressBar
+        android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/progressBar"
-        android:layout_gravity="center"
-        android:visibility="visible" />
+        android:visibility="gone" />
 </LinearLayout>

@@ -35,6 +35,7 @@ public class UsersActivity extends AppCompatActivity {
         ArrayList<String> users = new ArrayList<>();
         ArrayList<String> songs = new ArrayList<>();
         ArrayList<String> song_urls = new ArrayList<>();
+        ArrayList<String> album_art_urls = new ArrayList<>();
 
         JSONObject jObject = null;
         String responseString;
@@ -64,7 +65,7 @@ public class UsersActivity extends AppCompatActivity {
             users = jsonToJava(jObject.getJSONArray("users"));
             songs = jsonToJava(jObject.getJSONArray("song_names"));
             song_urls = jsonToJava(jObject.getJSONArray("song_urls"));
-
+            album_art_urls = jsonToJava(jObject.getJSONArray("album_urls"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -76,9 +77,8 @@ public class UsersActivity extends AppCompatActivity {
 
                 MyListData dummyObj = new MyListData();
                 dummyObj.setUserId(users.get(i));
-                dummyObj.setImgId(android.R.drawable.ic_dialog_email);
                 dummyObj.setSongName(songs.get(i));
-
+                dummyObj.setAlbumUrl(album_art_urls.get(i));
                 myListData [i] = dummyObj;
             } catch (Exception e) {
                 e.printStackTrace();
