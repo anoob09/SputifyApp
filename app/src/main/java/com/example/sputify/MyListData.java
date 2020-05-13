@@ -4,10 +4,14 @@ public class MyListData{
     private String songName;
     private String userId;
     private int imgId;
-    public MyListData(String songName, String userId, int imgId) {
+    private String songUrl;
+    private String albumUrl;
+    public MyListData(String albumUrl, String songName, String userId, int imgId, String songUrl) {
         this.songName = songName;
         this.userId = userId;
         this.imgId = imgId;
+        this.songUrl = songUrl;
+        this.albumUrl = albumUrl;
     }
 
     public MyListData() {}
@@ -30,4 +34,8 @@ public class MyListData{
     public void setImgId(int imgId) {
         this.imgId = imgId;
     }
+    public void setSongUrl(String songUrl) {this.songUrl = songUrl;}
+    public String getSongUrl(){return songUrl;};
+    public String getAlbumUrl(){return  albumUrl;}
+    public void setAlbumUrl(String albumUrl) {this.albumUrl = albumUrl;}
 }
