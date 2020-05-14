@@ -229,7 +229,7 @@ public class MainActivity extends AppCompatActivity {
     private AuthorizationRequest getAuthenticationRequest(AuthorizationResponse.Type type) {
         return new AuthorizationRequest.Builder(CLIENT_ID, type, getRedirectUri().toString())
                 .setShowDialog(false)
-                .setScopes(new String[]{"user-read-email", "user-read-playback-state", "user-read-recently-played"})
+                .setScopes(new String[]{"user-read-email", "user-read-currently-playing", "user-read-recently-played"})
                 .setCampaign("your-campaign-token")
                 .build();
     }
