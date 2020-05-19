@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
     //Spotify Auth
     public static final String CLIENT_ID = "0ed69a13f4324b1fa02a4cf26a11bba9";
-    public static final String REDIRECT_URI = "https://eflask-app-1.herokuapp.com/";
+    public static final String REDIRECT_URI = "https://heroku-sputify-server.herokuapp.com";
     public static final int AUTH_TOKEN_REQUEST_CODE = 0x10;
     public static final int AUTH_CODE_REQUEST_CODE = 0x11;
 
@@ -246,7 +246,8 @@ public class MainActivity extends AppCompatActivity {
 
         Request requestToSputifyServer = new Request.Builder()
 //                .url("https://eflask-app-1.herokuapp.com/")
-                .url("http://192.168.43.57:5000/")
+//                .url("http://192.168.43.57:5000/")
+                .url("https://heroku-sputify-server.herokuapp.com")
                 .post(reqBody)
                 .header("Accept", "application/json")
                 .header("Content-Type", "application/json")
